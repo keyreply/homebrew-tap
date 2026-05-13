@@ -7,7 +7,7 @@ class Kira < Formula
   on_macos do
     on_arm do
       url "https://github.com/keyreply/homebrew-tap/releases/download/v#{version}/kira-#{version}-darwin-arm64.tar.gz"
-      sha256 "7b3f47d3d2df8104033545429b84695a748e8ba80fd72feb3f3675b1a67172fd"
+      sha256 "a3840f1f457b7c3fe47de36d011eb547c8c2ee915cbbbcd143b1f42c06479ea7"
     end
   end
 
