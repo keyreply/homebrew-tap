@@ -13,6 +13,7 @@ class Kira < Formula
 
   def install
     bin.install "kira"
+    zsh_completion.install "zsh-completions/_kira"
   end
 
   test do
