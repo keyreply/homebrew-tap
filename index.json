@@ -1,0 +1,9 @@
+{
+  "$schema": "https://aka.ms/winget-manifest.version.1.6.0.schema.json",
+  "Packages": [
+    {
+      "PackageIdentifier": "KeyReply.Kira",
+      "Versions": ["0.30.4"]
+    }
+  ]
+}

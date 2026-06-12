@@ -1,0 +1,13 @@
+PackageIdentifier: KeyReply.Kira
+PackageVersion: 0.30.4
+PackageLocale: en-US
+Publisher: KeyReply
+PublisherUrl: https://github.com/keyreply
+PackageName: kira
+License: Proprietary
+ShortDescription: KeyReply Kira Platform CLI
+Description: >-
+  KeyReply Kira Platform CLI for tenant management, voice agents, workflows,
+  campaigns, and channel configuration.
+ManifestType: locale
+ManifestVersion: 1.6.0
