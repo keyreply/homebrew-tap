@@ -3,7 +3,10 @@
   "Packages": [
     {
       "PackageIdentifier": "KeyReply.Kira",
-      "Versions": ["0.30.4"]
+      "Versions": [
+        "0.30.5",
+        "0.30.4"
+      ]
     }
   ]
 }
