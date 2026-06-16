@@ -39,8 +39,8 @@
 <h2>Install</h2>
 
 <h3>macOS / Linux — Homebrew</h3>
-<pre><code>brew tap keyreply/tap
-brew install kira</code></pre>
+<pre><code>brew install keyreply/tap/kira</code></pre>
+<p style="font-size:.82rem;color:var(--muted);margin-top:-.5rem">The fully-qualified name is self-trusting — no <code>brew trust</code> step needed on any Homebrew version.</p>
 
 <h3>Installing Homebrew on Linux</h3>
 <p>If Homebrew is not yet installed, use the official installer for your distro:</p>
@@ -70,8 +70,7 @@ echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' &gt;&gt; ~/.bashrc
 source ~/.bashrc</code></pre>
 
 <p>Then install Kira:</p>
-<pre><code>brew tap keyreply/tap
-brew install kira</code></pre>
+<pre><code>brew install keyreply/tap/kira</code></pre>
 
 <h3>Windows — WinGet</h3>
 <pre><code>winget source add --name keyreply https://winget.keyreply.com/
@@ -91,7 +90,7 @@ winget install KeyReply.Kira --source keyreply</code></pre>
 </table>
 
 <h2>Upgrade</h2>
-<pre><code>brew update &amp;&amp; brew upgrade kira                # Homebrew
+<pre><code>brew upgrade keyreply/tap/kira                    # Homebrew
 winget upgrade KeyReply.Kira --source keyreply  # WinGet</code></pre>
 
 <h2>Supported platforms</h2>
