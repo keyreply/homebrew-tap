@@ -1,0 +1,23 @@
+PackageIdentifier: KeyReply.Kira
+PackageVersion: 0.30.6
+MinimumOSVersion: 10.0.17763.0
+InstallerType: zip
+NestedInstallerType: portable
+NestedInstallerFiles:
+  - RelativeFilePath: kira.exe
+    PortableCommandAlias: kira
+Scope: user
+InstallModes:
+  - silent
+  - silentWithProgress
+InstallerSwitches:
+  Silent: ""
+  SilentWithProgress: ""
+UpgradeBehavior: install
+ProductName: kira
+ProductCode: KeyReply.Kira
+InstallerUrl: https://github.com/keyreply/homebrew-tap/releases/download/v0.30.6/kira-0.30.6-windows-x64.zip
+InstallerSha256: 8dc0fdf602ae35b45867970f98cc7f6b7e2b125c78a4ecd8172e477b5c953c3a
+Architecture: x64
+ManifestType: installer
+ManifestVersion: 1.6.0
