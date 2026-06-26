@@ -21,6 +21,24 @@ class Kira < Formula
     zsh_completion.install "zsh-completions/_kira"
   end
 
+  def post_install
+    system bin/"kira", "tenant", "install-prompt"
+  rescue StandardError => e
+    opoo "Could not configure shell prompt integration: #{e.message}"
+  end
+
+  def caveats
+    <<~EOS
+      Shell prompt integration:
+        kira tenant install-prompt     # configure (already ran)
+        kira tenant install-prompt --uninstall  # remove
+
+      Restart your shell or run:
+        source ~/.zshrc   # zsh
+        source ~/.bashrc  # bash
+    EOS
+  end
+
   test do
     assert_match "kira", shell_output("#{bin}/kira --help 2>&1")
     assert_match version.to_s, shell_output("#{bin}/kira --version 2>&1")
