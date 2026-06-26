@@ -1,42 +1,24 @@
 class Kira < Formula
   desc "KeyReply Kira Platform CLI"
   homepage "https://github.com/keyreply/kira-cloudflare"
-  version "0.30.7"
+  version "0.30.9"
   license :cannot_represent
 
   on_macos do
     on_arm do
       url "https://github.com/keyreply/homebrew-tap/releases/download/v#{version}/kira-#{version}-darwin-arm64.tar.gz"
-      sha256 "749200442bbec0a0392e35fa567569f3de1514e6a1c84d7e1510f9785ca0e866"
+      sha256 "dc0985673b79158646bc712aea86c69f4824657465ba0ff233667db4568f5862"
     end
 
     on_intel do
       url "https://github.com/keyreply/homebrew-tap/releases/download/v#{version}/kira-#{version}-darwin-x64.tar.gz"
-      sha256 "0be4afdb124eeba59f8b1340d9060ab63f48f1afad72a3159e5a1382c3f81432"
+      sha256 "2749f8b4008b360ad061ff03ab9af36cce149a5faa2d5c0bc19dffcaa67b2784"
     end
   end
 
   def install
     bin.install "kira"
     zsh_completion.install "zsh-completions/_kira"
-  end
-
-  def post_install
-    system bin/"kira", "tenant", "install-prompt"
-  rescue StandardError => e
-    opoo "Could not configure shell prompt integration: #{e.message}"
-  end
-
-  def caveats
-    <<~EOS
-      Shell prompt integration:
-        kira tenant install-prompt     # configure (already ran)
-        kira tenant install-prompt --uninstall  # remove
-
-      Restart your shell or run:
-        source ~/.zshrc   # zsh
-        source ~/.bashrc  # bash
-    EOS
   end
 
   test do
