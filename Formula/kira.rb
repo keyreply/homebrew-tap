@@ -1,18 +1,18 @@
 class Kira < Formula
   desc "KeyReply Kira Platform CLI"
   homepage "https://github.com/keyreply/kira-cloudflare"
-  version "0.30.17"
+  version "0.30.18"
   license :cannot_represent
 
   on_macos do
     on_arm do
       url "https://github.com/keyreply/homebrew-tap/releases/download/v#{version}/kira-#{version}-darwin-arm64.tar.gz"
-      sha256 "edbe2046935c5e99cd63f84e93b831f3fd7ad16ebc1dfad816e5f6985494ae52"
+      sha256 "7841ce067c15765d48c883e9753253e9ba9c2f716d906673fb6b523b766c1150"
     end
 
     on_intel do
       url "https://github.com/keyreply/homebrew-tap/releases/download/v#{version}/kira-#{version}-darwin-x64.tar.gz"
-      sha256 "ea9a66d8696c981c2983fa096232689393e86eb27fc01458f352fb2078f1f257"
+      sha256 "84e36596f5ddaf1505a03aab422cd2c3eb6399921f0728267bf0bd830782487d"
     end
   end
 
@@ -22,9 +22,15 @@ class Kira < Formula
   end
 
   def post_install
-    system bin/"kira", "tenant", "install-prompt"
-  rescue StandardError => e
-    opoo "Could not configure shell prompt integration: #{e.message}"
+    ENV["KIRA_DISABLE_AUTO_UPDATE"] = "1"
+    ENV["KIRA_DISABLE_SKILL_REFRESH"] = "1"
+    system bin/"kira", "chatgpt-skills", "install", "--force"
+    system bin/"kira", "claude-skills", "install", "--force"
+    begin
+      system bin/"kira", "tenant", "install-prompt"
+    rescue StandardError => e
+      opoo "Could not configure shell prompt integration: #{e.message}"
+    end
   end
 
   def caveats
@@ -32,6 +38,10 @@ class Kira < Formula
       Shell prompt integration:
         kira tenant install-prompt     # configure (already ran)
         kira tenant install-prompt --uninstall  # remove
+
+      Kira's ChatGPT/Codex and Claude skill packs are force-refreshed
+      during installation and upgrade. Existing bundled kira-* skill
+      directories are replaced; unrelated custom skills are untouched.
 
       Restart your shell or run:
         source ~/.zshrc   # zsh

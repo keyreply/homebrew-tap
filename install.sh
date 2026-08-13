@@ -7,6 +7,7 @@
 #   KIRA_VERSION=v0.30.1        pin a version (default: latest)
 #   KIRA_INSTALL_DIR=...        install directory (default: /usr/local/bin, fallback: ~/.local/bin)
 #   KIRA_SKIP_CHECKSUM=1        skip SHA256 verification (not recommended)
+#   KIRA_DISABLE_AUTO_UPDATE=1  disable the installed CLI's daily compatibility gate
 #
 set -euo pipefail
 
@@ -172,6 +173,10 @@ fi
 
 mv -f -- "$TMPBIN" "$TARGET"
 echo "Installed kira v${VERSION} to ${TARGET}" >&2
+
+echo "Refreshing bundled Kira skills..." >&2
+KIRA_DISABLE_AUTO_UPDATE=1 KIRA_DISABLE_SKILL_REFRESH=1 "$TARGET" chatgpt-skills install --force
+KIRA_DISABLE_AUTO_UPDATE=1 KIRA_DISABLE_SKILL_REFRESH=1 "$TARGET" claude-skills install --force
 
 case "$TARGET" in
   "$HOME"/.local/bin/*)
