@@ -1,23 +1,26 @@
 class Kira < Formula
   desc "KeyReply Kira Platform CLI"
   homepage "https://github.com/keyreply/kira-cloudflare"
-  version "0.30.36"
+  version "0.30.37"
   license :cannot_represent
 
   on_macos do
     on_arm do
       url "https://github.com/keyreply/homebrew-tap/releases/download/v#{version}/kira-#{version}-darwin-arm64.tar.gz"
-      sha256 "6119aeb058cca5aefe1bf516c33a6bf04e07bde873ba17cd7ace327c0a8f1c5b"
+      sha256 "b4393ae53f0e310d0a4c806293eb8db3ee6d30998e1a793341314d03ceb35013"
     end
 
     on_intel do
       url "https://github.com/keyreply/homebrew-tap/releases/download/v#{version}/kira-#{version}-darwin-x64.tar.gz"
-      sha256 "00a2b0141405921766e272732d563bbda6d74bec97308ed2983797da47ce3e11"
+      sha256 "53352f0d3d15f461002799f52a1e70967a69e2a7bcaafa82b261ededf03f331c"
     end
   end
 
   def install
     bin.install "kira"
+    unless quiet_system "/usr/bin/codesign", "--verify", "--strict", bin/"kira"
+      system "/usr/bin/codesign", "--force", "--sign", "-", "--identifier", "com.keyreply.kira", bin/"kira"
+    end
     zsh_completion.install "zsh-completions/_kira"
   end
 

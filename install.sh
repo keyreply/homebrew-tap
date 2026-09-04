@@ -8,6 +8,7 @@
 #   KIRA_INSTALL_DIR=...        install directory (default: /usr/local/bin, fallback: ~/.local/bin)
 #   KIRA_SKIP_CHECKSUM=1        skip SHA256 verification (not recommended)
 #   KIRA_DISABLE_AUTO_UPDATE=1  disable the installed CLI's daily compatibility gate
+#   KIRA_DISABLE_SKILL_REFRESH=1  skip chatgpt/claude skill install after the binary is in place
 #
 set -euo pipefail
 
@@ -44,6 +45,39 @@ sha256_file() {
   fi
   echo "No SHA256 tool found. Install shasum/sha256sum or set KIRA_SKIP_CHECKSUM=1." >&2
   exit 1
+}
+
+# Bun --compile leaves a linker-signed adhoc blob that can disagree with the
+# shipped bytes. Re-sign last on macOS when strict verify fails so the kernel
+# does not SIGKILL the new binary (CODESIGNING: Invalid Page). #4456
+ensure_macos_signature() {
+  local bin="$1"
+  if [[ "$(uname -s)" != "Darwin" ]]; then
+    return 0
+  fi
+  if ! command -v codesign >/dev/null 2>&1; then
+    echo "codesign is required to install kira on macOS." >&2
+    exit 1
+  fi
+  if codesign --verify --strict "$bin" >/dev/null 2>&1; then
+    echo "macOS code signature verified for ${bin}" >&2
+    return 0
+  fi
+  echo "Shipped kira signature is invalid; re-signing adhoc so page hashes match..." >&2
+  codesign --force --sign - --identifier com.keyreply.kira "$bin"
+  codesign --verify --strict "$bin"
+}
+
+# Exec-probe the extracted binary before replacing a working install. A
+# SIGKILL'd replacement would otherwise brick ~/.local/bin/kira. #4456
+probe_kira_binary() {
+  local bin="$1"
+  if ! KIRA_DISABLE_AUTO_UPDATE=1 KIRA_DISABLE_SKILL_REFRESH=1 "$bin" --version >/dev/null; then
+    echo "kira binary failed to execute (${bin})." >&2
+    echo "On macOS, inspect with: codesign --verify --strict --verbose=2 ${bin}" >&2
+    echo "Workaround for a stale linker-signed blob: codesign --force --sign - ${bin}" >&2
+    exit 1
+  fi
 }
 
 detect_platform() {
@@ -162,6 +196,9 @@ if [[ ! -f "$TMPBIN" ]]; then
 fi
 chmod +x "$TMPBIN" 2>/dev/null || true
 
+ensure_macos_signature "$TMPBIN"
+probe_kira_binary "$TMPBIN"
+
 if [[ -w "$INSTALL_DIR" ]]; then
   TARGET="${INSTALL_DIR}/${EXE_NAME}"
 else
@@ -174,9 +211,13 @@ fi
 mv -f -- "$TMPBIN" "$TARGET"
 echo "Installed kira v${VERSION} to ${TARGET}" >&2
 
-echo "Refreshing bundled Kira skills..." >&2
-KIRA_DISABLE_AUTO_UPDATE=1 KIRA_DISABLE_SKILL_REFRESH=1 "$TARGET" chatgpt-skills install --force
-KIRA_DISABLE_AUTO_UPDATE=1 KIRA_DISABLE_SKILL_REFRESH=1 "$TARGET" claude-skills install --force
+if [[ "${KIRA_DISABLE_SKILL_REFRESH:-}" == "1" ]]; then
+  echo "Skipping bundled skill refresh (KIRA_DISABLE_SKILL_REFRESH=1)." >&2
+else
+  echo "Refreshing bundled Kira skills..." >&2
+  KIRA_DISABLE_AUTO_UPDATE=1 KIRA_DISABLE_SKILL_REFRESH=1 "$TARGET" chatgpt-skills install --force
+  KIRA_DISABLE_AUTO_UPDATE=1 KIRA_DISABLE_SKILL_REFRESH=1 "$TARGET" claude-skills install --force
+fi
 
 case "$TARGET" in
   "$HOME"/.local/bin/*)
