@@ -1,18 +1,18 @@
 class Kira < Formula
   desc "KeyReply Kira Platform CLI"
   homepage "https://github.com/keyreply/kira-cloudflare"
-  version "0.30.89"
+  version "0.30.90"
   license :cannot_represent
 
   on_macos do
     on_arm do
       url "https://github.com/keyreply/homebrew-tap/releases/download/v#{version}/kira-#{version}-darwin-arm64.tar.gz"
-      sha256 "3014018dd64fa11a475d055fe5a89b6e105810d7bd751985ea4764978bfcb67a"
+      sha256 "9f4df04c44fe6d553b0d9f3762f91558152d679450482dd5eb083b2f29d620e6"
     end
 
     on_intel do
       url "https://github.com/keyreply/homebrew-tap/releases/download/v#{version}/kira-#{version}-darwin-x64.tar.gz"
-      sha256 "529eec8bbd77ab312e3e61dec81fd283abf8530a8b90e77b5c279b21fa2f9774"
+      sha256 "b57ca98d6627cbf0a998a4930d0a79118672b30429c40e0f7c8e1894f6a400f5"
     end
   end
 
